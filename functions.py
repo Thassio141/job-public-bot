@@ -3,12 +3,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from bs4 import BeautifulSoup
 #Version 1.2
-options = webdriver.ChromeOptions()
-options.add_argument("--headless")  # Não abra o navegador
-options.add_argument('window-size=1920x1080')
-agent="Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/34.0.1866.237 Safari/537.36"
-options.add_argument(f'user-agent={agent}')
-driver = webdriver.Chrome(options=options)
 
 def welcome_message(bot,message):
     msg_text = """Olá, sou a Jobby e estou aqui para auxiliar você a encontrar sua vaga desejada!\n
@@ -64,6 +58,10 @@ def response_search_gupy(bot,message):
         
     bot.reply_to(message, f'Ok! Aguarde um momento enquanto procuro as vagas! (Pode demorar até 15 segundos)')
 
+    options = webdriver.ChromeOptions()
+    options.add_argument("--headless")  # Não abra o navegador
+    options.add_argument('window-size=1920x1080')
+    driver = webdriver.Chrome(options=options)
     driver.get(url)
 
     for _ in range(3):
@@ -98,7 +96,7 @@ def response_search_gupy(bot,message):
 
     else:
         bot.reply_to(message, f'Desculpe não encontrei vagas sobre {variavel}')
-
+    driver.quit()
     bot.send_message(message.chat.id, 'Posso te ajudar em mais alguma coisa?')
 
 
@@ -123,6 +121,10 @@ def response_search_linkedin(bot,message):
     
     bot.reply_to(message, f'Ok! Aguarde um momento enquanto procuro as vagas! (Pode demorar até 15 segundos)')
 
+    options = webdriver.ChromeOptions()
+    options.add_argument("--headless")  # Não abra o navegador
+    options.add_argument('window-size=1920x1080')
+    driver = webdriver.Chrome(options=options)
     driver.get(url) 
 
     for _ in range(3):
@@ -158,6 +160,7 @@ def response_search_linkedin(bot,message):
 
     else:
         bot.reply_to(message, f'Desculpe não encontrei vagas sobre {variavel}')
+    driver.quit()
 
     bot.send_message(message.chat.id, 'Posso te ajudar em mais alguma coisa?')
 
@@ -183,6 +186,13 @@ def glassdoor_response(bot, message):
             bot.reply_to(message, f'Você precisa digitar o nome da vaga junto ao comando para poder pesquisar!')
             return 
     bot.reply_to(message, f'Ok! Aguarde um momento enquanto procuro as vagas! (Pode demorar até 15 segundos)')
+    
+    options = webdriver.ChromeOptions()
+    options.add_argument("--headless")  # Não abra o navegador
+    options.add_argument('window-size=1920x1080')
+    agent="Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/34.0.1866.237 Safari/537.36"
+    options.add_argument(f'user-agent={agent}')
+    driver = webdriver.Chrome(options=options)
     driver.get(url) 
 
     for _ in range(3):
@@ -212,6 +222,8 @@ def glassdoor_response(bot, message):
 
     else:
         bot.reply_to(message, f'Desculpe não encontrei vagas sobre {variavel} no glassdoor')
+    driver.quit()
+    bot.send_message(message.chat.id, 'Posso te ajudar em mais alguma coisa?')
 
 def vacancy_mix(bot,message):
     mensagem_texto = message.text
@@ -234,7 +246,12 @@ def vacancy_mix(bot,message):
             return
         
     bot.reply_to(message, f'Ok! Aguarde um momento enquanto procuro as vagas! (Pode demorar até 15 segundos)')
-
+    options = webdriver.ChromeOptions()
+    options.add_argument("--headless")  # Não abra o navegador
+    options.add_argument('window-size=1920x1080')
+    agent="Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/34.0.1866.237 Safari/537.36"
+    options.add_argument(f'user-agent={agent}')
+    driver = webdriver.Chrome(options=options)
     driver.get(url)
 
     for _ in range(3):
@@ -380,5 +397,7 @@ def vacancy_mix(bot,message):
 
     else:
         bot.reply_to(message, f'Desculpe não encontrei vagas sobre {variavel} no glassdoor')
+    
+    driver.quit()
     bot.send_message(message.chat.id, 'Posso te ajudar em mais alguma coisa?')
         
