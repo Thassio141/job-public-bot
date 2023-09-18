@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="https://github.com/Thassio141/job-public-bot/blob/master/image/imagem%20BOT.png" alt="image">
+    <img src="https://github.com/Thassio141/job-public-bot/blob/main/image/imagem%20BOT.png" alt="image">
     <H1> Jobby </H1>
 </p>
 
