@@ -1,7 +1,7 @@
 from functions import *
 import telebot  
 
-#Version 1.1 alpha test
+#Version 1.2
 
 TOKEN = 'SEU TOKEN'
 bot = telebot.TeleBot(TOKEN)
@@ -18,13 +18,17 @@ def search_job(message):
 def search_linkedin_job(message):
     response_search_linkedin(bot,message)
 
-@bot.message_handler(commands=['detalhes'])
-def detail_message_response(message):
-    detail_message(bot,message)
+@bot.message_handler(commands=['glassdoor','glassdoor_remoto'])
+def glassdoor(message):
+    glassdoor_response(bot,message)
 
 @bot.message_handler(commands=['vagas','vagas_remotas'])
 def vacancy_mix_response(message):
     vacancy_mix(bot,message)
+
+@bot.message_handler(commands=['detalhes'])
+def detail_message_response(message):
+    detail_message(bot,message)
 
 @bot.message_handler(func=lambda msg: True)
 def any_message_response(message):
