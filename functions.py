@@ -3,6 +3,12 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from bs4 import BeautifulSoup
 #Version 1.2
+options = webdriver.ChromeOptions()
+options.add_argument("--headless")  # Não abra o navegador
+options.add_argument('window-size=1920x1080')
+agent="Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/34.0.1866.237 Safari/537.36"
+options.add_argument(f'user-agent={agent}')
+driver = webdriver.Chrome(options=options)
 
 def welcome_message(bot,message):
     msg_text = """Olá, sou a Jobby e estou aqui para auxiliar você a encontrar sua vaga desejada!\n
@@ -57,10 +63,7 @@ def response_search_gupy(bot,message):
             return
         
     bot.reply_to(message, f'Ok! Aguarde um momento enquanto procuro as vagas! (Pode demorar até 15 segundos)')
-    options = webdriver.ChromeOptions()
-    options.add_argument("--headless")  # Não abra o navegador
-    options.add_argument('window-size=1920x1080')
-    driver = webdriver.Chrome(options=options)
+
     driver.get(url)
 
     for _ in range(3):
@@ -99,8 +102,6 @@ def response_search_gupy(bot,message):
     bot.send_message(message.chat.id, 'Posso te ajudar em mais alguma coisa?')
 
 
-    driver.quit()
-
 def response_search_linkedin(bot,message):
     mensagem_texto = message.text
     if 'remoto' in message.text:
@@ -122,10 +123,6 @@ def response_search_linkedin(bot,message):
     
     bot.reply_to(message, f'Ok! Aguarde um momento enquanto procuro as vagas! (Pode demorar até 15 segundos)')
 
-    options = webdriver.ChromeOptions()
-    options.add_argument("--headless")  # Não abra o navegador
-    options.add_argument('window-size=1920x1080')
-    driver = webdriver.Chrome(options=options)
     driver.get(url) 
 
     for _ in range(3):
@@ -163,7 +160,6 @@ def response_search_linkedin(bot,message):
         bot.reply_to(message, f'Desculpe não encontrei vagas sobre {variavel}')
 
     bot.send_message(message.chat.id, 'Posso te ajudar em mais alguma coisa?')
-    driver.quit()
 
 def glassdoor_response(bot, message):
     mensagem_texto = message.text
@@ -186,14 +182,8 @@ def glassdoor_response(bot, message):
         except IndexError:
             bot.reply_to(message, f'Você precisa digitar o nome da vaga junto ao comando para poder pesquisar!')
             return 
-        
     bot.reply_to(message, f'Ok! Aguarde um momento enquanto procuro as vagas! (Pode demorar até 15 segundos)')
-
-    options = webdriver.ChromeOptions()
-    options.add_argument("--headless")  # Não abra o navegador
-    options.add_argument('window-size=1920x1080')
-    driver = webdriver.Chrome()
-    driver.get(url)
+    driver.get(url) 
 
     for _ in range(3):
         driver.find_element(By.TAG_NAME, 'body').send_keys(Keys.PAGE_DOWN)
@@ -202,8 +192,6 @@ def glassdoor_response(bot, message):
 
     cards = soup.find_all(class_='job-search-193lseq')
     if len(cards) > 0:
-        bot.send_message(message.chat.id, f'Aqui estão algumas vagas relacionadas a {variavel}')
-
         for card in cards:
             title_element = card.find(class_='job-title mt-xsm')
             company_element = card.find(class_='job-search-8wag7x')
@@ -223,9 +211,7 @@ def glassdoor_response(bot, message):
             bot.send_message(message.chat.id, mensagem)
 
     else:
-        bot.reply_to(message, f'Desculpe não encontrei vagas sobre {variavel}')
-
-    bot.send_message(message.chat.id, 'Posso te ajudar em mais alguma coisa?')
+        bot.reply_to(message, f'Desculpe não encontrei vagas sobre {variavel} no glassdoor')
 
 def vacancy_mix(bot,message):
     mensagem_texto = message.text
@@ -248,11 +234,7 @@ def vacancy_mix(bot,message):
             return
         
     bot.reply_to(message, f'Ok! Aguarde um momento enquanto procuro as vagas! (Pode demorar até 15 segundos)')
-    options = webdriver.ChromeOptions()
-    options.add_argument("--headless") 
-    agent="Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/34.0.1866.237 Safari/537.36"
-    options.add_argument(f'user-agent={agent}')
-    driver = webdriver.Chrome(options=options)
+
     driver.get(url)
 
     for _ in range(3):
@@ -399,5 +381,4 @@ def vacancy_mix(bot,message):
     else:
         bot.reply_to(message, f'Desculpe não encontrei vagas sobre {variavel} no glassdoor')
     bot.send_message(message.chat.id, 'Posso te ajudar em mais alguma coisa?')
-    driver.quit()
         
