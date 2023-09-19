@@ -2,7 +2,16 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from bs4 import BeautifulSoup
-#Version 1.2
+import datetime
+#Version 1.3
+
+def write_log(message):
+    now_datetime = datetime.datetime.now()
+    hour_now = now_datetime.strftime("%Y-%m-%d %H:%M:%S")
+    final_message = f"[{hour_now}] {message}"
+    
+    with open('log.txt', 'a') as file:
+        file.write(final_message + '\n')
 
 def welcome_message(bot,message):
     msg_text = """Olá, sou a Jobby e estou aqui para auxiliar você a encontrar sua vaga desejada!\n

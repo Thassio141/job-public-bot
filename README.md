@@ -15,12 +15,14 @@ A anotação ```@bot.message_handler(func=lambda msg: True)``` serve para respon
 
 Foi usado web scraping para conseguir informações de vagas tanto do linkedin quanto da gupy.
 
-<h2>Versão 1.2:</h2>
+<h2>Versão 1.3:</h2>
 
 -> Melhora a qualidade das respostas (Organizando o que o bot deve responder)
 <br>
 -> Filtro (Se a vaga é Remota ou Não)
 <br>
--> Consegue vagas do linkedin
+-> Consegue vagas do linkedin, Gupy e Glassdoor
 <br>
 -> Deploy em nuvem
+<br>
+-> Adiciona Log
