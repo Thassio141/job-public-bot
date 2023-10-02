@@ -1,8 +1,13 @@
 import os
+import time
 import telebot
+import schedule
 import functions
 import db_functions
+from threading import Thread
 from dotenv import load_dotenv
+
+import schedule_func
 from shortener import url_shortener
 
 load_dotenv()
@@ -23,13 +28,15 @@ def vacancy(message):
             results = db_functions.find_vacancy_db(vacancy_name)
             for result in results:
                 short_link = url_shortener(result['link'])
-                response_message = f"Título: {result['titulo']}\nEmpresa: {result['empresa']}\nLink: {short_link}\nLocal: {result['local']}\nTipo: {result['tipo_vaga']}"
+                response_message = (f"Título: {result['titulo']}\nEmpresa: {result['empresa']}\nLink: {short_link}"
+                                    f"\nLocal: {result['local']}\nTipo: {result['tipo_vaga']}")
                 bot.send_message(message.chat.id, response_message)
         else:
             print("encontrou no banco")
             for result in results:
                 short_link = url_shortener(result['link'])
-                response_message = f"Título: {result['titulo']}\nEmpresa: {result['empresa']}\nLink: {short_link}\nLocal: {result['local']}\nTipo: {result['tipo_vaga']}"
+                response_message = (f"Título: {result['titulo']}\nEmpresa: {result['empresa']}\nLink: {short_link}"
+                                    f"\nLocal: {result['local']}\nTipo: {result['tipo_vaga']}")
                 bot.send_message(message.chat.id, response_message)
 
 
@@ -44,13 +51,15 @@ def vacancy_remote(message):
             results = db_functions.find_remote_vacancy_db(vacancy_name)
             for result in results:
                 short_link = url_shortener(result['link'])
-                response_message = f"Título: {result['titulo']}\nEmpresa: {result['empresa']}\nLink: {short_link}\nLocal: {result['local']}\nTipo: {result['tipo_vaga']}"
+                response_message = (f"Título: {result['titulo']}\nEmpresa: {result['empresa']}\nLink: {short_link}"
+                                    f"\nLocal: {result['local']}\nTipo: {result['tipo_vaga']}")
                 bot.send_message(message.chat.id, response_message)
         else:
             print("encontrou no banco")
             for result in results:
                 short_link = url_shortener(result['link'])
-                response_message = f"Título: {result['titulo']}\nEmpresa: {result['empresa']}\nLink: {short_link}\nLocal: {result['local']}\nTipo: {result['tipo_vaga']}"
+                response_message = (f"Título: {result['titulo']}\nEmpresa: {result['empresa']}\nLink: {short_link}"
+                                    f"\nLocal: {result['local']}\nTipo: {result['tipo_vaga']}")
                 bot.send_message(message.chat.id, response_message)
 
 
@@ -75,16 +84,24 @@ def conditional_message_handler(msg):
         bot.send_message(msg.message.chat.id,
                          "Digite o nome da vaga que você quer procurar:\n(Seja objetivo e não utilize nome de cidades)")
         bot.register_next_step_handler(msg.message, vacancy)
-        print("funcionou")
 
     if msg.data == "button_click_vacancy_remote":
         bot.send_message(msg.message.chat.id, "Digite o nome da vaga que você quer procurar:")
         bot.register_next_step_handler(msg.message, vacancy_remote)
-        print("funcionou")
 
     if msg.data == "button_click_detail":
         bot.send_message(msg.message.chat.id, functions.detail_message())
 
 
+def schedule_checker():
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
+
+
 if __name__ == '__main__':
+    schedule.every().day.at("11:00").do(schedule_func.func_web_scraping_data)
+    schedule.every().day.at("17:00").do(schedule_func.func_web_scraping_data)
+    schedule.every().day.at("23:55").do(schedule_func.schedule_delete_old_data)
+    Thread(target=schedule_checker).start()
     bot.infinity_polling()

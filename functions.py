@@ -1,3 +1,4 @@
+import log_func
 import requests
 import datetime
 import db_functions
@@ -5,12 +6,12 @@ from bs4 import BeautifulSoup
 from shortener import id_link_linkedin
 
 
-# Bug de todas as vagas e coloca como presencial ainda continua
 def all_web_scraping(message):
     web_scraping_linkedin_remote(message)
     web_scraping_linkedin(message)
     web_scraping_gupy_remote(message)
     web_scraping_gupy(message)
+    log_func.write_log(f'Função procurar vaga usando web scraping')
 
 
 def web_scraping_linkedin(message):
@@ -24,7 +25,6 @@ def web_scraping_linkedin(message):
         "Presencial")
 
 
-# Descobrir porque está salvando apenas Presencial ao invés de Remoto
 def web_scraping_linkedin_remote(message):
     web_scraping(
         f"https://www.linkedin.com/jobs/search?keywords={message}&location=Brasil&locationId=&geoId=106057199&f_TPR=r86400&f_WT=2&position=1&pageNum=0",
@@ -80,33 +80,35 @@ def web_scraping(url, general_card_class, title_html_class, company_html_class, 
 
         if "linkedin" in link:
             id_link = id_link_linkedin(link)
-            print(id_link)
 
             if not id_link:
                 pass
 
             else:
                 if db_functions.verify_existing_document(id_link):
-                    print("já existe um link desse no banco")
+                    log_func.write_log(f'Função web scraping: já existe um link desse no banco')
                     pass
+
                 else:
                     db_functions.add_vacancy(title, company, actual_hour, id_link, local, vacancy_type)
-                    print("Não existe um link desse no banco")
+                    log_func.write_log(f'Função web scraping: Não existe um link desse no banco')
 
         elif "gupy" in link:
-            print(link)
+
             if not link:
                 pass
             else:
                 if db_functions.verify_existing_document(link):
-                    print("já existe um link desse no banco")
+                    log_func.write_log(f'Função web scraping: já existe um link desse no banco')
                     pass
+
                 else:
                     db_functions.add_vacancy(title, company, actual_hour, link, local, vacancy_type)
-                    print("Não existe um link desse no banco")
+                    log_func.write_log(f'Função web scraping: Não existe um link desse no banco')
 
 
 def detail_message():
+    log_func.write_log(f'Função detalhes chamada')
     return ("Atualmente estou na versão 1.4!\n\nLinkedin: "
             "https://www.linkedin.com/in/th%C3%A1ssio-vagner-6098a5215/\n\nGithub do projeto Jobby: "
             "https://github.com/Thassio141/job-public-bot")
